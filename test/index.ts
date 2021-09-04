@@ -1,11 +1,11 @@
-import type {TestInterface, ExecutionContext} from 'ava';
-import anyTest from 'ava';
-import {URL} from 'url';
-import type * as http from 'http';
-import * as stream from 'stream';
-import * as childProcess from 'child_process';
 import {exec} from '@nlib/nodetool';
+import type {ExecutionContext, TestInterface} from 'ava';
+import anyTest from 'ava';
+import * as childProcess from 'child_process';
+import type * as http from 'http';
 import fetch from 'node-fetch';
+import * as stream from 'stream';
+import type {SableOptions} from '..';
 import {startServer} from '..';
 
 interface TestContext {
@@ -44,7 +44,7 @@ test.beforeEach((beforeT) => {
                 }
             };
             process.stdout.pipe(new stream.Writable({
-                write(chunk, _encoding, callback) {
+                write(chunk: Buffer, _encoding, callback) {
                     check(chunk);
                     callback();
                 },
@@ -54,7 +54,7 @@ test.beforeEach((beforeT) => {
                 },
             }));
             process.stderr.pipe(new stream.Writable({
-                write(chunk, _encoding, callback) {
+                write(chunk: Buffer, _encoding, callback) {
                     check(chunk);
                     callback();
                 },
@@ -86,7 +86,7 @@ let port = 9200;
 
 test('GET /src', async (t) => {
     const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`, __dirname);
-    const res = await fetch(new URL('/src', localURL));
+    const res = await fetch(new URL('/src', localURL.href).href);
     t.is(res.status, 200);
     t.is(res.headers.get('content-type'), 'text/html');
     const html = await res.text();
@@ -95,21 +95,20 @@ test('GET /src', async (t) => {
 
 test('GET /', async (t) => {
     const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`, __dirname);
-    const res = await fetch(new URL('/', localURL));
+    const res = await fetch(new URL('/', localURL.href).href);
     t.is(res.status, 200);
 });
 
 test('GET /index.ts', async (t) => {
-    const config = {
+    const config: SableOptions = {
         host: 'localhost',
         port: port++,
         documentRoot: __dirname,
     };
-    const server = await startServer(config);
-    t.context.server = server;
+    const server = t.context.server = await startServer(config);
     const addressInfo = server.address();
     if (addressInfo && typeof addressInfo === 'object') {
-        const res = await fetch(new URL(`http://localhost:${addressInfo.port}/index.ts`));
+        const res = await fetch(new URL(`http://localhost:${addressInfo.port}/index.ts`).href);
         t.is(res.status, 200);
     } else {
         t.is(typeof addressInfo, 'object');
