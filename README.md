@@ -1,6 +1,6 @@
 # Sable
 
-[![Test](https://github.com/kei-ito/sable/actions/workflows/workflow.yml/badge.svg)](https://github.com/kei-ito/sable/actions/workflows/workflow.yml)
+[![test](https://github.com/kei-ito/sable/actions/workflows/test.yml/badge.svg)](https://github.com/kei-ito/sable/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/kei-ito/sable/branch/master/graph/badge.svg)](https://codecov.io/gh/kei-ito/sable)
 
 Starts a server for development.
