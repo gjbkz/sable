@@ -37,7 +37,7 @@
         "@nlib/githooks": "0.1.0",
         "@nlib/nodetool": "0.4.2",
         "@types/connect": "3.4.35",
-        "@types/node": "16.10.2",
+        "@types/node": "16.10.3",
         "@types/node-fetch": "2.5.12",
         "@typescript-eslint/eslint-plugin": "4.32.0",
         "@typescript-eslint/parser": "4.32.0",
