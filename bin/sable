@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 const console = require('console');
-const program = require('commander');
+const {Command} = require('commander');
 const {startServer} = require('..');
 const packageJSON = require('../package.json');
 
-program
+const program = new Command()
 .version(packageJSON.version)
 .description('Starts a HTTP server for development')
 .usage('[options] <documentRoot ...>')
@@ -18,7 +18,10 @@ if (program.noWatch) {
     program.watch = false;
 }
 
-startServer(program)
+startServer({
+    ...program.opts(),
+    documentRoot: 0 < program.args.length ? program.args : [process.cwd()],
+})
 .catch((error) => {
     console.error(error);
     process.exit(1);
