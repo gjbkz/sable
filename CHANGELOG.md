@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.13 (2021-11-05)
+
+### Bug Fixes
+
+- commander api calls ([4dbe2ff](https://github.com/kei-ito/sable/commit/4dbe2ffdf8a3fd099c145678f8a45aaa711b2232))
+
+### Dependency Upgrades
+
+- downgrade node-fetch and embed eslint and ava configurations ([76a0709](https://github.com/kei-ito/sable/commit/76a07099a2a051f7d79a3bf87e597c710f838e52))
+- @nlib/nodetool:0.4.2→1.0.0 @types/node-fetch:2.5.12→3.0.3 @typescript-eslint/eslint-plugin:4.33.0→5.3.0 @typescript-eslint/parser:4.33.0→5.3.0 commander:8.1.0→8.3.0 eslint:7.32.0→8.1.0 middleware-static-livereload:1.2.20→1.2.21 node-fetch:2.6.6→3.0.0 typescript:4.4.2→4.4.4 ([785e60f](https://github.com/kei-ito/sable/commit/785e60f86377e73ccc8c4074c87142425ec1b479))
+- remove some packages ([d890849](https://github.com/kei-ito/sable/commit/d8908497915f9c8264b68863786bea341995311c))
+
+
 ## v0.5.12 (2021-09-04)
 
 ### Bug Fixes
