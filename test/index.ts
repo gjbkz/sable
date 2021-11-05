@@ -5,9 +5,7 @@ import * as childProcess from 'child_process';
 import type * as http from 'http';
 import fetch from 'node-fetch';
 import * as stream from 'stream';
-import type {SableOptions} from '..';
 import {startServer} from '..';
-
 interface TestContext {
     process?: childProcess.ChildProcess,
     server?: http.Server,
@@ -88,7 +86,16 @@ test('GET /src', async (t) => {
     const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`, __dirname);
     const res = await fetch(new URL('/src', localURL.href).href);
     t.is(res.status, 200);
-    t.is(res.headers.get('content-type'), 'text/html');
+    t.is(res.headers.get('content-type'), 'text/html; charset=UTF-8');
+    const html = await res.text();
+    t.true(html.includes('<script'));
+});
+
+test('GET /src (documentRoot)', async (t) => {
+    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost src`, __dirname);
+    const res = await fetch(new URL('/', localURL.href).href);
+    t.is(res.status, 200);
+    t.is(res.headers.get('content-type'), 'text/html; charset=UTF-8');
     const html = await res.text();
     t.true(html.includes('<script'));
 });
@@ -100,7 +107,7 @@ test('GET /', async (t) => {
 });
 
 test('GET /index.ts', async (t) => {
-    const config: SableOptions = {
+    const config = {
         host: 'localhost',
         port: port++,
         documentRoot: __dirname,

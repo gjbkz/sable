@@ -28,27 +28,55 @@
         "version:add": "git add ."
     },
     "dependencies": {
-        "commander": "8.1.0",
+        "commander": "8.3.0",
         "connect": "3.7.0",
-        "middleware-static-livereload": "1.2.20"
+        "middleware-static-livereload": "1.2.21"
     },
     "devDependencies": {
         "@nlib/eslint-config": "3.17.28",
         "@nlib/githooks": "0.1.0",
-        "@nlib/nodetool": "0.4.2",
+        "@nlib/nodetool": "1.0.0",
         "@types/connect": "3.4.35",
         "@types/node": "16.11.6",
         "@types/node-fetch": "2.5.12",
-        "@typescript-eslint/eslint-plugin": "4.33.0",
-        "@typescript-eslint/parser": "4.33.0",
+        "@typescript-eslint/eslint-plugin": "5.3.0",
+        "@typescript-eslint/parser": "5.3.0",
         "ava": "3.15.0",
         "chokidar": "3.5.2",
-        "eslint": "7.32.0",
+        "eslint": "8.1.0",
         "lint-staged": "11.2.6",
         "node-fetch": "2.6.6",
         "npm-run-all": "4.1.5",
         "ts-node": "10.4.0",
-        "typescript": "4.4.2"
+        "typescript": "4.4.4"
+    },
+    "eslintConfig": {
+        "extends": [
+            "@nlib/eslint-config"
+        ],
+        "ignorePatterns": [
+            "test/src",
+            "test/test-*"
+        ],
+        "env": {
+            "es6": true,
+            "node": true
+        },
+        "rules": {
+            "@nlib/no-globals": "off"
+        }
+    },
+    "ava": {
+        "extensions": [
+            "ts",
+            "js"
+        ],
+        "require": [
+            "ts-node/register"
+        ],
+        "files": [
+            "test/index.ts"
+        ]
     },
     "lint-staged": {
         "*.js": [
