@@ -33,7 +33,7 @@
         "middleware-static-livereload": "1.2.21"
     },
     "devDependencies": {
-        "@nlib/eslint-config": "3.17.28",
+        "@nlib/eslint-config": "3.17.29",
         "@nlib/githooks": "0.1.0",
         "@nlib/nodetool": "1.0.0",
         "@types/connect": "3.4.35",
