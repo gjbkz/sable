@@ -5,13 +5,13 @@
     "author": {
         "name": "Kei Ito",
         "email": "kei.itof@gmail.com",
-        "url": "https://github.com/kei-ito"
+        "url": "https://github.com/gjbkz"
     },
     "license": "Apache-2.0",
     "engines": {
         "node": ">=12"
     },
-    "repository": "kei-ito/sable",
+    "repository": "https://github.com/gjbkz/sable",
     "main": "./lib/index.js",
     "bin": {
         "sable": "./bin/sable"
