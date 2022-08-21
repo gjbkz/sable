@@ -80,12 +80,7 @@
         ]
     },
     "lint-staged": {
-        "*.js": [
-            "eslint"
-        ],
-        "*.ts": [
-            "eslint"
-        ]
+        "*!(.d).{ts,tsx,js,mjs,cjs,jsx}": "eslint"
     },
     "renovate": {
         "extends": [
