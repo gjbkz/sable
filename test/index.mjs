@@ -1,42 +1,28 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as childProcess from 'child_process';
-import type * as http from 'http';
 import * as stream from 'stream';
-import type {ExecutionContext, TestFn} from 'ava';
-import anyTest from 'ava';
+import {fileURLToPath} from 'url';
+import test from 'ava';
 import fetch from 'node-fetch';
 // eslint-disable-next-line import/no-relative-parent-imports
-import {startServer} from '..';
+import {startServer} from '../lib/index.mjs';
 
-interface TestContext {
-    process?: childProcess.ChildProcess,
-    server?: http.Server,
-    start: (
-        t: ExecutionContext<TestContext>,
-        command: string,
-        cwd: string,
-    ) => Promise<URL>,
-}
-
-const test = anyTest as TestFn<TestContext>;
+const cwd = new URL('.', import.meta.url);
 
 test.before(() => {
-    childProcess.execSync('npm install --no-save', {
-        cwd: __dirname,
-        stdio: 'inherit',
-    });
+    childProcess.execSync('npm install --no-save', {cwd, stdio: 'inherit'});
 });
 
 test.beforeEach((beforeT) => {
-    beforeT.context.start = async (t, command, cwd) => {
+    beforeT.context.start = async (t, command) => {
         const process = t.context.process = childProcess.spawn(
             `npx ${command}`,
             {cwd, shell: true},
         );
-        const localURL = await new Promise<URL>((resolve, reject) => {
-            const chunks: Array<Buffer> = [];
+        const localURL = await new Promise((resolve, reject) => {
+            const chunks = [];
             let totalLength = 0;
-            const check = (chunk: Buffer) => {
+            const check = (chunk) => {
                 chunks.push(chunk);
                 totalLength += chunk.length;
                 const concatenated = Buffer.concat(chunks, totalLength);
@@ -46,7 +32,7 @@ test.beforeEach((beforeT) => {
                 }
             };
             process.stdout.pipe(new stream.Writable({
-                write(chunk: Buffer, _encoding, callback) {
+                write(chunk, _encoding, callback) {
                     check(chunk);
                     callback();
                 },
@@ -56,7 +42,7 @@ test.beforeEach((beforeT) => {
                 },
             }));
             process.stderr.pipe(new stream.Writable({
-                write(chunk: Buffer, _encoding, callback) {
+                write(chunk, _encoding, callback) {
                     check(chunk);
                     callback();
                 },
@@ -72,7 +58,7 @@ test.afterEach(async (t) => {
     }
     const {server} = t.context;
     if (server) {
-        await new Promise<void>((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             server.close((error) => {
                 if (error) {
                     reject(error);
@@ -87,7 +73,7 @@ test.afterEach(async (t) => {
 let port = 9200;
 
 test('GET /src', async (t) => {
-    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`, __dirname);
+    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`);
     const res = await fetch(new URL('/src', localURL.href).href);
     t.is(res.status, 200);
     t.is(res.headers.get('content-type'), 'text/html; charset=UTF-8');
@@ -96,30 +82,27 @@ test('GET /src', async (t) => {
 });
 
 test('GET /src (documentRoot)', async (t) => {
-    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost src`, __dirname);
+    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost src`);
     const res = await fetch(new URL('/', localURL.href).href);
     t.is(res.status, 200);
-    t.is(res.headers.get('content-type'), 'text/html; charset=UTF-8');
-    const html = await res.text();
-    t.true(html.includes('<script'));
 });
 
 test('GET /', async (t) => {
-    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`, __dirname);
+    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`);
     const res = await fetch(new URL('/', localURL.href).href);
     t.is(res.status, 200);
 });
 
-test('GET /index.ts', async (t) => {
+test('GET /index.mjs', async (t) => {
     const config = {
         host: 'localhost',
         port: port++,
-        documentRoot: __dirname,
+        documentRoot: fileURLToPath(cwd),
     };
     const server = t.context.server = await startServer(config);
     const addressInfo = server.address();
     if (addressInfo && typeof addressInfo === 'object') {
-        const res = await fetch(new URL(`http://localhost:${addressInfo.port}/index.ts`).href);
+        const res = await fetch(new URL(`http://localhost:${addressInfo.port}/index.mjs`).href);
         t.is(res.status, 200);
     } else {
         t.is(typeof addressInfo, 'object');
