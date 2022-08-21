@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as connect from 'connect';
 import * as staticLivereload from 'middleware-static-livereload';
+
 export {LogLevel} from 'middleware-static-livereload';
 
 export interface SableOptions extends staticLivereload.Options {
@@ -23,9 +24,11 @@ export interface SableOptions extends staticLivereload.Options {
     middlewares?: Array<connect.HandleFunction>,
 }
 
-export const startServer = async (options: SableOptions = {}): Promise<http.Server> => {
+export const startServer = async (
+    options: SableOptions = {},
+): Promise<http.Server> => {
     const app = connect();
-    for (const middleware of (options.middlewares || [])) {
+    for (const middleware of options.middlewares || []) {
         app.use(middleware);
     }
     app.use(staticLivereload.middleware(options));
