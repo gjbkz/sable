@@ -1,11 +1,13 @@
-import {exec} from '@nlib/nodetool';
-import type {ExecutionContext, TestInterface} from 'ava';
-import anyTest from 'ava';
+/* eslint-disable import/no-extraneous-dependencies */
 import * as childProcess from 'child_process';
 import type * as http from 'http';
-import fetch from 'node-fetch';
 import * as stream from 'stream';
+import type {ExecutionContext, TestFn} from 'ava';
+import anyTest from 'ava';
+import fetch from 'node-fetch';
+// eslint-disable-next-line import/no-relative-parent-imports
 import {startServer} from '..';
+
 interface TestContext {
     process?: childProcess.ChildProcess,
     server?: http.Server,
@@ -16,11 +18,13 @@ interface TestContext {
     ) => Promise<URL>,
 }
 
-const test = anyTest as TestInterface<TestContext>;
+const test = anyTest as TestFn<TestContext>;
 
-test.before(async (t) => {
-    const result = await exec('npm install --no-save', {cwd: __dirname});
-    t.log(result.stdout, result.stderr);
+test.before(() => {
+    childProcess.execSync('npm install --no-save', {
+        cwd: __dirname,
+        stdio: 'inherit',
+    });
 });
 
 test.beforeEach((beforeT) => {
