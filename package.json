@@ -43,7 +43,7 @@
         "@nlib/githooks": "0.1.0",
         "@nlib/lint-commit": "0.2.0",
         "@types/connect": "3.4.35",
-        "@types/node": "18.11.7",
+        "@types/node": "18.11.8",
         "@types/node-fetch": "2.6.2",
         "@typescript-eslint/eslint-plugin": "5.41.0",
         "@typescript-eslint/parser": "5.41.0",
