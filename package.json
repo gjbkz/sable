@@ -32,7 +32,7 @@
         "version:add": "git add ."
     },
     "dependencies": {
-        "commander": "9.5.0",
+        "commander": "10.0.1",
         "connect": "3.7.0",
         "middleware-static-livereload": "1.2.21"
     },
