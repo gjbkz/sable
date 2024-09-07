@@ -3,7 +3,6 @@ import * as childProcess from 'child_process';
 import * as stream from 'stream';
 import {fileURLToPath} from 'url';
 import test from 'ava';
-import fetch from 'node-fetch';
 // eslint-disable-next-line import/no-relative-parent-imports
 import {startServer} from '../lib/index.mjs';
 
