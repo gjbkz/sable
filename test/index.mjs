@@ -21,9 +21,15 @@ const onClose = async () => {
  */
 const start = async (command) => {
   const process = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
-  closeFunctions.add(() => {
-    process.kill();
-  });
+  const kill = () => {
+    if (process.exitCode === null) {
+      process.kill();
+    }
+  }
+  closeFunctions.add(kill);
+  const timeoutMs = 10000;
+  const timerId = setTimeout(kill, timeoutMs);
+  closeFunctions.add(() =>  clearTimeout(timerId));
   const localURL = await new Promise((resolve, reject) => {
     const chunks = [];
     let totalLength = 0;
@@ -87,7 +93,6 @@ test('GET /src', async (t) => {
   assert.equal(res.headers.get('content-type'), 'text/html; charset=UTF-8');
   const html = await res.text();
   assert.ok(html.includes('href="./index.html"'));
-  await onClose();
 });
 
 test('GET /src (documentRoot)', async (t) => {
@@ -97,7 +102,6 @@ test('GET /src (documentRoot)', async (t) => {
   assert.equal(res.status, 200);
   const html = await res.text();
   assert.ok(html.includes('test-src'));
-  await onClose();
 });
 
 test('GET /', async (t) => {
@@ -105,7 +109,6 @@ test('GET /', async (t) => {
   const localURL = await start(command);
   const res = await fetch(new URL('/', localURL.href));
   assert.equal(res.status, 200);
-  await onClose();
 });
 
 test('GET /index.mjs', async (t) => {
@@ -115,5 +118,4 @@ test('GET /index.mjs', async (t) => {
     new URL(`http://localhost:${localURL.port}/index.mjs`),
   );
   assert.equal(res.status, 200);
-  await onClose();
 });
