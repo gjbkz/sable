@@ -1,15 +1,11 @@
 #!/usr/bin/env node
-import * as fs from 'fs/promises';
 import { Command } from 'commander';
 import { LogLevel } from 'middleware-static-livereload';
 import { startServer, type SableOptions } from './index';
 
-const packageJsonPath = new URL('../package.json', import.meta.url);
-const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8')) as {
-  version: string;
-};
+const {version} = require('../package.json');
 const program = new Command()
-  .version(packageJson.version)
+  .version(version)
   .description('Starts a HTTP server for development')
   .usage('[options] <documentRoot ...>')
   .option('-p, --port <n>', 'A port number for HTTP, HTTPS (4000)', Number.parseInt)

@@ -12,10 +12,10 @@
         "node": ">=14"
     },
     "repository": "https://github.com/gjbkz/sable",
-    "type": "module",
-    "main": "./lib/index.mjs",
+    "type": "commonjs",
+    "main": "./lib/index.js",
     "bin": {
-        "sable": "./lib/cli.mjs"
+        "sable": "./lib/cli.js"
     },
     "files": [
         "lib"
@@ -24,8 +24,7 @@
         "lint": "npx @biomejs/biome lint",
         "build": "run-s build:*",
         "build:tsc": "tsc",
-        "build:esmify": "nlib-esmify \"./lib/**/*\"",
-        "build:chmod": "chmod +x lib/cli.mjs",
+        "build:chmod": "chmod +x lib/cli.js",
         "test": "node --test test/index.mjs",
         "version": "run-s version:changelog version:add",
         "version:changelog": "nlib-changelog --output CHANGELOG.md",
@@ -39,7 +38,6 @@
     "devDependencies": {
         "@biomejs/biome": "1.8.3",
         "@nlib/changelog": "0.3.1",
-        "@nlib/esmify": "0.3.3",
         "@nlib/githooks": "0.2.0",
         "@nlib/lint-commit": "1.0.1",
         "@types/connect": "3.4.38",

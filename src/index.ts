@@ -1,9 +1,6 @@
 import * as http from 'http';
-import { createRequire } from 'module';
 import type * as Connect from 'connect';
 import * as staticLivereload from 'middleware-static-livereload';
-
-const require = createRequire(import.meta.url);
 
 export { LogLevel } from 'middleware-static-livereload';
 
