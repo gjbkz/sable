@@ -8,6 +8,12 @@ import * as assert from 'node:assert/strict';
 const cwd = new URL('.', import.meta.url);
 /** @type {Set<() => void | Promise<void>>} */
 const closeFunctions = new Set();
+const onClose = async () => {
+  for (const fn of closeFunctions) {
+    await fn();
+    closeFunctions.delete(fn);
+  }
+}
 
 /**
  * @param {string} command
@@ -69,10 +75,7 @@ test.before(() => {
   childProcess.execSync('npm install --no-save', {cwd, stdio: 'inherit'});
 });
 
-test.afterEach(async (t) => {
-  await Promise.all([...closeFunctions].map((fn) => fn()));
-  closeFunctions.clear();
-});
+test.afterEach(onClose);
 
 let port = 9200;
 
@@ -84,6 +87,7 @@ test('GET /src', async (t) => {
   assert.equal(res.headers.get('content-type'), 'text/html; charset=UTF-8');
   const html = await res.text();
   assert.ok(html.includes('href="./index.html"'));
+  await onClose();
 });
 
 test('GET /src (documentRoot)', async (t) => {
@@ -93,6 +97,7 @@ test('GET /src (documentRoot)', async (t) => {
   assert.equal(res.status, 200);
   const html = await res.text();
   assert.ok(html.includes('test-src'));
+  await onClose();
 });
 
 test('GET /', async (t) => {
@@ -100,6 +105,7 @@ test('GET /', async (t) => {
   const localURL = await start(command);
   const res = await fetch(new URL('/', localURL.href));
   assert.equal(res.status, 200);
+  await onClose();
 });
 
 test('GET /index.mjs', async (t) => {
@@ -109,4 +115,5 @@ test('GET /index.mjs', async (t) => {
     new URL(`http://localhost:${localURL.port}/index.mjs`),
   );
   assert.equal(res.status, 200);
+  await onClose();
 });
