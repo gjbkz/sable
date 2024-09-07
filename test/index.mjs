@@ -1,109 +1,111 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import * as childProcess from 'child_process';
-import * as stream from 'stream';
-import {fileURLToPath} from 'url';
-import test from 'ava';
-// eslint-disable-next-line import/no-relative-parent-imports
-import {startServer} from '../lib/index.mjs';
+//@ts-check
+import * as childProcess from 'node:child_process';
+import * as stream from 'node:stream';
+import { fileURLToPath } from 'node:url';
+import { test } from 'node:test';
+import * as assert from 'node:assert/strict';
+import { startServer } from '../lib/index.mjs';
 
 const cwd = new URL('.', import.meta.url);
+/** @type {Set<() => void | Promise<void>>} */
+const closeFunctions = new Set();
 
-test.before(() => {
-    childProcess.execSync('npm install --no-save', {cwd, stdio: 'inherit'});
-});
-
-test.beforeEach((beforeT) => {
-    beforeT.context.start = async (t, command) => {
-        const process = t.context.process = childProcess.spawn(
-            `npx ${command}`,
-            {cwd, shell: true},
-        );
-        const localURL = await new Promise((resolve, reject) => {
-            const chunks = [];
-            let totalLength = 0;
-            const check = (chunk) => {
-                chunks.push(chunk);
-                totalLength += chunk.length;
-                const concatenated = Buffer.concat(chunks, totalLength);
-                const matched = (/http:\/\/\S+/).exec(`${concatenated}`);
-                if (matched) {
-                    resolve(new URL(matched[0]));
-                }
-            };
-            process.stdout.pipe(new stream.Writable({
-                write(chunk, _encoding, callback) {
-                    check(chunk);
-                    callback();
-                },
-                final(callback) {
-                    reject(new Error(`Failed to get a local URL: ${Buffer.concat(chunks, totalLength)}`));
-                    callback();
-                },
-            }));
-            process.stderr.pipe(new stream.Writable({
-                write(chunk, _encoding, callback) {
-                    check(chunk);
-                    callback();
-                },
-            }));
-        });
-        return localURL;
+/**
+ * @param {string} command
+ * @returns {Promise<URL>}
+ */
+const start = async (command) => {
+  const process = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
+  closeFunctions.add(() => {
+    process.kill();
+  });
+  const localURL = await new Promise((resolve, reject) => {
+    const chunks = [];
+    let totalLength = 0;
+    /**
+     * @param {Buffer} chunk
+     */
+    const check = (chunk) => {
+      chunks.push(chunk);
+      totalLength += chunk.length;
+      const concatenated = Buffer.concat(chunks, totalLength);
+      const matched = /http:\/\/\S+/.exec(`${concatenated}`);
+      if (matched) {
+        resolve(new URL(matched[0]));
+      }
     };
-});
+    process.stdout.pipe(
+      new stream.Writable({
+        write(chunk, _encoding, callback) {
+          console.info(`${chunk}`);
+          check(chunk);
+          callback();
+        },
+        final(callback) {
+          reject(
+            new Error(
+              `Failed to get a local URL: ${Buffer.concat(
+                chunks,
+                totalLength,
+              )}`,
+            ),
+          );
+          callback();
+        },
+      }),
+    );
+    process.stderr.pipe(
+      new stream.Writable({
+        write(chunk, _encoding, callback) {
+          check(chunk);
+          callback();
+        },
+      }),
+    );
+  });
+  return localURL;
+};
 
 test.afterEach(async (t) => {
-    if (t.context.process) {
-        t.context.process.kill();
-    }
-    const {server} = t.context;
-    if (server) {
-        await new Promise((resolve, reject) => {
-            server.close((error) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
+  await Promise.all([...closeFunctions].map((fn) => fn()));
+  closeFunctions.clear();
 });
 
 let port = 9200;
 
 test('GET /src', async (t) => {
-    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`);
-    const res = await fetch(new URL('/src', localURL.href).href);
-    t.is(res.status, 200);
-    t.is(res.headers.get('content-type'), 'text/html; charset=UTF-8');
-    const html = await res.text();
-    t.true(html.includes('<script'));
+  const command = `sable --verbose --port ${port++}`;
+  const localURL = await start(command);
+  const res = await fetch(new URL('/src', localURL.href));
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('content-type'), 'text/html; charset=UTF-8');
+  const html = await res.text();
+  assert.ok(html.includes('href="./index.html"'));
 });
 
 test('GET /src (documentRoot)', async (t) => {
-    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost src`);
-    const res = await fetch(new URL('/', localURL.href).href);
-    t.is(res.status, 200);
+  const command = `sable --verbose --port ${port++} src`;
+  const localURL = await start(command);
+  const res = await fetch(new URL('/', localURL.href));
+  assert.equal(res.status, 200);
+  const html = await res.text();
+  console.info(html);
+  assert.ok(html.includes('test-src'));
 });
 
 test('GET /', async (t) => {
-    const localURL = await t.context.start(t, `sable --port ${port++} --host localhost`);
-    const res = await fetch(new URL('/', localURL.href).href);
-    t.is(res.status, 200);
+  const command = `sable --verbose --port ${port++}`;
+  const localURL = await start(command);
+  const res = await fetch(new URL('/', localURL.href));
+  assert.equal(res.status, 200);
 });
 
 test('GET /index.mjs', async (t) => {
-    const config = {
-        host: 'localhost',
-        port: port++,
-        documentRoot: fileURLToPath(cwd),
-    };
-    const server = t.context.server = await startServer(config);
-    const addressInfo = server.address();
-    if (addressInfo && typeof addressInfo === 'object') {
-        const res = await fetch(new URL(`http://localhost:${addressInfo.port}/index.mjs`).href);
-        t.is(res.status, 200);
-    } else {
-        t.is(typeof addressInfo, 'object');
-    }
+  const command = `sable --verbose --port ${port++}`;
+  const localURL = await start(command);
+  const res = await fetch(
+    new URL(`http://localhost:${localURL.port}/index.mjs`),
+  );
+  assert.equal(res.status, 200);
 });
