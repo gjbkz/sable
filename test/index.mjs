@@ -2,10 +2,8 @@
 //@ts-check
 import * as childProcess from 'node:child_process';
 import * as stream from 'node:stream';
-import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 import * as assert from 'node:assert/strict';
-import { startServer } from '../lib/index.mjs';
 
 const cwd = new URL('.', import.meta.url);
 /** @type {Set<() => void | Promise<void>>} */
@@ -67,6 +65,10 @@ const start = async (command) => {
   return localURL;
 };
 
+test.before(() => {
+  childProcess.execSync('npm install --no-save', {cwd, stdio: 'inherit'});
+});
+
 test.afterEach(async (t) => {
   await Promise.all([...closeFunctions].map((fn) => fn()));
   closeFunctions.clear();
@@ -90,7 +92,6 @@ test('GET /src (documentRoot)', async (t) => {
   const res = await fetch(new URL('/', localURL.href));
   assert.equal(res.status, 200);
   const html = await res.text();
-  console.info(html);
   assert.ok(html.includes('test-src'));
 });
 
