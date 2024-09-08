@@ -28,7 +28,6 @@ export interface SableOptions
 export const startServer = async (
   options: SableOptions = {},
 ): Promise<http.Server> => {
-  console.info({ sableOptions: options });
   const app = (require('connect') as () => Connect.Server)();
   for (const middleware of options.middlewares || []) {
     app.use(middleware);
