@@ -32,15 +32,7 @@ const start = async (command) => {
 	const child = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
 	const kill = () => {
 		console.info(`stopping ${child.pid} (${process.platform})`);
-		let command = "";
-		switch (process.platform) {
-			case "win32":
-				command = `taskkill /pid ${child.pid} /f /t`;
-				break;
-			default:
-				command = `kill ${child.pid}`;
-		}
-		childProcess.spawnSync(command, { stdio: "inherit", shell: true });
+		child.kill("SIGTERM");
 		console.info(`stopped ${child.pid} (${process.platform})`);
 	};
 	abc.signal.addEventListener("abort", kill);
