@@ -12,9 +12,9 @@ const onClose = async () => {
 	const total = closeFunctions.size;
 	for (const { name, fn } of closeFunctions) {
 		const index = total - closeFunctions.size;
-		console.info(`Closing ${name} (${index + 1}/${total})`);
+		console.info(`closing ${name} (${index + 1}/${total})`);
 		await fn();
-		console.info(`Closed ${name} (${index + 1}/${total})`);
+		console.info(`closed ${name} (${index + 1}/${total})`);
 	}
 	closeFunctions.clear();
 };
@@ -31,19 +31,15 @@ const start = async (command) => {
 	abc.signal.addEventListener("abort", () => clearTimeout(timerId));
 	const child = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
 	const kill = () => {
-		console.info(`stopping ${child.pid}`);
+		console.info(`stopping ${child.pid} (${process.platform})`);
 		switch (process.platform) {
 			case "win32":
 				childProcess.execSync(`taskkill /pid ${child.pid} /f /t`);
 				break;
-			case "darwin":
-			case "linux":
-				childProcess.execSync(`kill ${child.pid}`);
-				break;
 			default:
-				child.kill(0);
+				childProcess.execSync(`kill ${child.pid}`);
 		}
-		console.info(`stopped ${child.pid}`);
+		console.info(`stopped ${child.pid} (${process.platform})`);
 	};
 	abc.signal.addEventListener("abort", kill);
 	const localUrl = await new Promise((resolve, reject) => {
