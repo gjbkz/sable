@@ -17,19 +17,21 @@ const onClose = async () => {
 
 /**
  * @param {string} command
- * @returns {Promise<URL>}
+ * @returns {Promise<{localURL: URL, abc: AbortController}>}
  */
 const start = async (command) => {
+  const abc = new AbortController();
+  closeFunctions.add(() => abc.abort());
+  const timeoutMs = 10000;
+  const timerId = setTimeout(() => abc.abort(), timeoutMs);
+  closeFunctions.add(() =>  clearTimeout(timerId));
   const process = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
   const kill = () => {
     if (process.exitCode === null) {
       process.kill();
     }
   }
-  closeFunctions.add(kill);
-  const timeoutMs = 10000;
-  const timerId = setTimeout(kill, timeoutMs);
-  closeFunctions.add(() =>  clearTimeout(timerId));
+  abc.signal.addEventListener('abort', kill);
   const localURL = await new Promise((resolve, reject) => {
     const chunks = [];
     let totalLength = 0;
@@ -74,7 +76,7 @@ const start = async (command) => {
       }),
     );
   });
-  return localURL;
+  return {localURL, abc};
 };
 
 test.before(() => {
@@ -87,8 +89,8 @@ let port = 9200;
 
 test('GET /src', async (t) => {
   const command = `sable --verbose --port ${port++}`;
-  const localURL = await start(command);
-  const res = await fetch(new URL('/src', localURL.href));
+  const {localURL, abc} = await start(command);
+  const res = await fetch(new URL('/src', localURL), {signal: abc.signal});
   assert.equal(res.status, 200);
   assert.equal(res.headers.get('content-type'), 'text/html; charset=UTF-8');
   const html = await res.text();
@@ -97,8 +99,8 @@ test('GET /src', async (t) => {
 
 test('GET /src (documentRoot)', async (t) => {
   const command = `sable --verbose --port ${port++} src`;
-  const localURL = await start(command);
-  const res = await fetch(new URL('/', localURL.href));
+  const {localURL, abc} = await start(command);
+  const res = await fetch(new URL('/', localURL), {signal: abc.signal});
   assert.equal(res.status, 200);
   const html = await res.text();
   assert.ok(html.includes('test-src'));
@@ -106,16 +108,17 @@ test('GET /src (documentRoot)', async (t) => {
 
 test('GET /', async (t) => {
   const command = `sable --verbose --port ${port++}`;
-  const localURL = await start(command);
-  const res = await fetch(new URL('/', localURL.href));
+  const {localURL, abc} = await start(command);
+  const res = await fetch(new URL('/', localURL), {signal: abc.signal});
   assert.equal(res.status, 200);
 });
 
 test('GET /index.mjs', async (t) => {
   const command = `sable --verbose --port ${port++}`;
-  const localURL = await start(command);
+  const {localURL, abc} = await start(command);
   const res = await fetch(
     new URL(`http://localhost:${localURL.port}/index.mjs`),
+    {signal: abc.signal},
   );
   assert.equal(res.status, 200);
 });
