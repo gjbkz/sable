@@ -32,16 +32,15 @@ const start = async (command) => {
 	const child = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
 	const kill = () => {
 		console.info(`stopping ${child.pid} (${process.platform})`);
-		/** @type {Buffer | null} */
-		let result = null;
+		let command = "";
 		switch (process.platform) {
 			case "win32":
-				result = childProcess.execSync(`taskkill /pid ${child.pid} /f /t`);
+				command = `taskkill /pid ${child.pid} /f /t`;
 				break;
 			default:
-				result = childProcess.execSync(`kill ${child.pid}`);
+				command = `kill ${child.pid}`;
 		}
-		console.info(`${result}`);
+		childProcess.spawnSync(command, { stdio: "inherit", shell: true });
 		console.info(`stopped ${child.pid} (${process.platform})`);
 	};
 	abc.signal.addEventListener("abort", kill);
@@ -82,10 +81,23 @@ const start = async (command) => {
 };
 
 test.before(() => {
+	console.info("---- test.before ----");
 	childProcess.execSync("npm install --no-save", { cwd, stdio: "inherit" });
 });
 
-test.afterEach(onClose);
+test.beforeEach(async () => {
+	console.info("---- test.beforeEach ----");
+});
+
+test.afterEach(async () => {
+	console.info("---- test.afterEach ----");
+	await onClose();
+});
+
+test.after(async () => {
+	console.info("---- test.after ----");
+	await onClose();
+});
 
 let port = 9200;
 
