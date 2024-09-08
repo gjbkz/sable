@@ -32,13 +32,16 @@ const start = async (command) => {
 	const child = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
 	const kill = () => {
 		console.info(`stopping ${child.pid} (${process.platform})`);
+		/** @type {Buffer | null} */
+		let result = null;
 		switch (process.platform) {
 			case "win32":
-				childProcess.execSync(`taskkill /pid ${child.pid} /f /t`);
+				result = childProcess.execSync(`taskkill /pid ${child.pid} /f /t`);
 				break;
 			default:
-				childProcess.execSync(`kill ${child.pid}`);
+				result = childProcess.execSync(`kill ${child.pid}`);
 		}
+		console.info(`${result}`);
 		console.info(`stopped ${child.pid} (${process.platform})`);
 	};
 	abc.signal.addEventListener("abort", kill);
