@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.5.15 (2024-09-08)
+
+### Tests
+
+- fix eslint errors ([0dc28df](https://github.com/gjbkz/sable/commit/0dc28dfb75af8fa9b25bb40caca01bb069944112))
+
+### Code Refactoring
+
+- type:module ([a3539a4](https://github.com/gjbkz/sable/commit/a3539a4c077ad540d185c1b2f664a53fc0f59557))
+
+### Continuous Integration
+
+- skip test on push ([c67e288](https://github.com/gjbkz/sable/commit/c67e288672cf86d946502ea7036829c1cc58aa0c))
+- use v18 ([b20cc9b](https://github.com/gjbkz/sable/commit/b20cc9b7bd71604105183ec5f5642d45001a4b92))
+
+### Dependency Upgrades
+
+- upgrade dependencies (#691) ([960ea89](https://github.com/gjbkz/sable/commit/960ea89521727f6ae7bc06312058365114808cee))
+- npm update ([b6d976c](https://github.com/gjbkz/sable/commit/b6d976c0f20ff8c0c939cb72d6475190245203a8))
+- install @nlib/changelog ([816ae0f](https://github.com/gjbkz/sable/commit/816ae0fbbdb9c3f7f2f1b15b77d23f09a12747ea))
+- uninstall @nlib/nodetool ([2f2ee62](https://github.com/gjbkz/sable/commit/2f2ee6291532aa699f45227230fe574de777c252))
+- @nlib/eslint-config:3.17.30→3.19.4 @typescript-eslint/eslint-plugin:5.7.0→5.33.1 @typescript-eslint/parser:5.7.0→5.33.1 eslint:8.5.0→8.22.0 ([9b7082a](https://github.com/gjbkz/sable/commit/9b7082af3e691002b87c6c1d977eea2afceaafbf))
+- node-fetch:2.6.6→3.2.10 @types/node-fetch:2.5.12→2.6.2 ([50bb491](https://github.com/gjbkz/sable/commit/50bb4916d907ed04aaf35c22523496646ee7a80d))
+- @types/node:17.0.0→18.7.8 ([d556feb](https://github.com/gjbkz/sable/commit/d556feb9653a487f0f2eb8c5d05643c54a82857d))
+- ava:3.15.0→4.3.1 ([99bf069](https://github.com/gjbkz/sable/commit/99bf069589d293faba5cb64e98a62f9073ad01b1))
+- commander:8.3.0→9.4.0 ([5d7f422](https://github.com/gjbkz/sable/commit/5d7f422fb6111471604fc58438538854cecfc467))
+- lint-staged:12.1.3→13.0.3 ([3621d4b](https://github.com/gjbkz/sable/commit/3621d4bd41faa279fe3462ab05a5e2b5d4436085))
+- add @nlib/lint-commit ([760d1c2](https://github.com/gjbkz/sable/commit/760d1c2b44159c24cfb6ca68d4b4e12a717f2952))
+
+
 ## v0.5.14 (2021-12-18)
 
 ### Bug Fixes
