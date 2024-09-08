@@ -20,6 +20,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         node: [22.x, 20.x]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     environment: test
     steps:
       - uses: actions/checkout@v4
