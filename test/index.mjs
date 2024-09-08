@@ -32,7 +32,7 @@ const start = async (command) => {
 	const child = childProcess.spawn(`npx ${command}`, {
 		cwd,
 		shell: true,
-		detached: true,
+		detached: process.platform !== "win32",
 	});
 	const kill = () => {
 		console.info(`stopping ${child.pid} (${process.platform})`);
