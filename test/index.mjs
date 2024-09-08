@@ -29,10 +29,26 @@ const start = async (command) => {
 	const timeoutMs = 10000;
 	const timerId = setTimeout(() => abc.abort(), timeoutMs);
 	abc.signal.addEventListener("abort", () => clearTimeout(timerId));
-	const child = childProcess.spawn(`npx ${command}`, { cwd, shell: true });
+	const child = childProcess.spawn(`npx ${command}`, {
+		cwd,
+		shell: true,
+		detached: true,
+	});
 	const kill = () => {
 		console.info(`stopping ${child.pid} (${process.platform})`);
-		child.kill("SIGTERM");
+		let command = "";
+		switch (process.platform) {
+			case "win32":
+				command = `taskkill /pid ${child.pid} /f /t`;
+				break;
+			default:
+				command = `kill -15 ${child.pid}`;
+				break;
+		}
+		if (command) {
+			console.info(`executing: ${command}`);
+			childProcess.spawnSync(command, { stdio: "inherit", shell: true });
+		}
 		console.info(`stopped ${child.pid} (${process.platform})`);
 	};
 	abc.signal.addEventListener("abort", kill);
