@@ -65,7 +65,10 @@ const start = async (command) => {
 			final(callback) {
 				reject(
 					new Error(
-						`Failed to get a local URL: ${Buffer.concat(chunks, totalLength)}`,
+						[
+							`Failed to get a local URL: ${Buffer.concat(chunks, totalLength)}`.trim(),
+							`command: ${command}`,
+						].join("\n"),
 					),
 				);
 				callback();

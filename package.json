@@ -12,19 +12,28 @@
 		"node": ">=14"
 	},
 	"repository": "https://github.com/gjbkz/sable",
-	"type": "commonjs",
-	"main": "./lib/index.js",
+	"type": "module",
+	"main": "./esm/index.mjs",
 	"bin": {
-		"sable": "./lib/cli.js"
+		"sable": "./esm/cli.mjs"
+	},
+	"exports": {
+		".": {
+			"types": "./types/index.d.ts",
+			"import": "./esm/index.mjs",
+			"require": "./cjs/index.cjs"
+		}
 	},
 	"files": [
-		"lib"
+		"esm",
+		"cjs",
+		"types"
 	],
 	"scripts": {
 		"lint": "npx @biomejs/biome lint",
 		"build": "run-s build:*",
-		"build:tsc": "tsc",
-		"build:chmod": "chmod +x lib/cli.js",
+		"build:typedef": "tsc --project tsconfig.typedef.json",
+		"build:code": "node build.ts",
 		"test": "node --test test/index.mjs",
 		"version": "run-s version:changelog version:add",
 		"version:changelog": "nlib-changelog --output CHANGELOG.md",
@@ -33,7 +42,7 @@
 	"dependencies": {
 		"commander": "14.0.1",
 		"connect": "3.7.0",
-		"middleware-static-livereload": "1.4.0"
+		"middleware-static-livereload": "1.4.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",
@@ -41,6 +50,7 @@
 		"@nlib/lint-commit": "1.0.1",
 		"@types/connect": "3.4.38",
 		"@types/node": "24.4.0",
+		"esbuild": "0.25.9",
 		"npm-run-all": "4.1.5",
 		"typescript": "5.9.2"
 	},

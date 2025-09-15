@@ -1,5 +1,5 @@
 import * as http from "node:http";
-import type * as Connect from "connect";
+import connect, { type HandleFunction } from "connect";
 import * as staticLivereload from "middleware-static-livereload";
 
 export { LogLevel } from "middleware-static-livereload";
@@ -22,13 +22,13 @@ export interface SableOptions
 	 * A list of middlewares.
 	 * @default []
 	 */
-	middlewares?: Array<Connect.HandleFunction>;
+	middlewares?: Array<HandleFunction>;
 }
 
 export const startServer = async (
 	options: SableOptions = {},
 ): Promise<http.Server> => {
-	const app = (require("connect") as () => Connect.Server)();
+	const app = connect();
 	for (const middleware of options.middlewares || []) {
 		app.use(middleware);
 	}
