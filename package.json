@@ -1,52 +1,52 @@
 {
-    "name": "sable",
-    "version": "0.5.15",
-    "description": "Starts a server and a file watcher",
-    "author": {
-        "name": "Kei Ito",
-        "email": "kei.itof@gmail.com",
-        "url": "https://github.com/gjbkz"
-    },
-    "license": "Apache-2.0",
-    "engines": {
-        "node": ">=14"
-    },
-    "repository": "https://github.com/gjbkz/sable",
-    "type": "commonjs",
-    "main": "./lib/index.js",
-    "bin": {
-        "sable": "./lib/cli.js"
-    },
-    "files": [
-        "lib"
-    ],
-    "scripts": {
-        "lint": "npx @biomejs/biome lint",
-        "build": "run-s build:*",
-        "build:tsc": "tsc",
-        "build:chmod": "chmod +x lib/cli.js",
-        "test": "node --test test/index.mjs",
-        "version": "run-s version:changelog version:add",
-        "version:changelog": "nlib-changelog --output CHANGELOG.md",
-        "version:add": "git add ."
-    },
-    "dependencies": {
-        "commander": "14.0.1",
-        "connect": "3.7.0",
-        "middleware-static-livereload": "1.4.0"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "2.2.4",
-        "@nlib/changelog": "0.3.2",
-        "@nlib/lint-commit": "1.0.1",
-        "@types/connect": "3.4.38",
-        "@types/node": "24.4.0",
-        "npm-run-all": "4.1.5",
-        "typescript": "5.9.2"
-    },
-    "renovate": {
-        "extends": [
-            "github>nlibjs/renovate-config"
-        ]
-    }
+	"name": "sable",
+	"version": "0.5.15",
+	"description": "Starts a server and a file watcher",
+	"author": {
+		"name": "Kei Ito",
+		"email": "kei.itof@gmail.com",
+		"url": "https://github.com/gjbkz"
+	},
+	"license": "Apache-2.0",
+	"engines": {
+		"node": ">=14"
+	},
+	"repository": "https://github.com/gjbkz/sable",
+	"type": "commonjs",
+	"main": "./lib/index.js",
+	"bin": {
+		"sable": "./lib/cli.js"
+	},
+	"files": [
+		"lib"
+	],
+	"scripts": {
+		"lint": "npx @biomejs/biome lint",
+		"build": "run-s build:*",
+		"build:tsc": "tsc",
+		"build:chmod": "chmod +x lib/cli.js",
+		"test": "node --test test/index.mjs",
+		"version": "run-s version:changelog version:add",
+		"version:changelog": "nlib-changelog --output CHANGELOG.md",
+		"version:add": "git add ."
+	},
+	"dependencies": {
+		"commander": "14.0.1",
+		"connect": "3.7.0",
+		"middleware-static-livereload": "1.4.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.4",
+		"@nlib/changelog": "0.3.2",
+		"@nlib/lint-commit": "1.0.1",
+		"@types/connect": "3.4.38",
+		"@types/node": "24.4.0",
+		"npm-run-all": "4.1.5",
+		"typescript": "5.9.2"
+	},
+	"renovate": {
+		"extends": [
+			"github>nlibjs/renovate-config"
+		]
+	}
 }

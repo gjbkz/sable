@@ -1,4 +1,4 @@
-import * as http from "http";
+import * as http from "node:http";
 import type * as Connect from "connect";
 import * as staticLivereload from "middleware-static-livereload";
 

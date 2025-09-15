@@ -1,20 +1,18 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "CommonJS",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "strict": true,
-        "removeComments": true,
-        "declaration": true,
-        "sourceMap": false,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "outDir": "./lib"
-    },
-    "include": [
-        "./src/**/*.ts"
-    ]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"strict": true,
+		"removeComments": true,
+		"declaration": true,
+		"sourceMap": false,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"outDir": "./lib"
+	},
+	"include": ["./src/**/*.ts"]
 }

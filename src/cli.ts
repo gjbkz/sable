@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { LogLevel } from "middleware-static-livereload";
-import { startServer, type SableOptions } from "./index";
+import { type SableOptions, startServer } from "./index";
 
 const { version } = require("../package.json");
 const program = new Command()
