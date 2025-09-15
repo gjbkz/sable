@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 //@ts-check
+import * as assert from "node:assert/strict";
 import * as childProcess from "node:child_process";
 import * as stream from "node:stream";
 import { test } from "node:test";
-import * as assert from "node:assert/strict";
 
 const cwd = new URL(".", import.meta.url);
 /** @type {Set<{name: string, fn: () => void | Promise<void>}>} */
@@ -53,6 +53,7 @@ const start = async (command) => {
 	};
 	abc.signal.addEventListener("abort", kill);
 	const localUrl = await new Promise((resolve, reject) => {
+		/** @type {Array<Buffer>} */
 		const chunks = [];
 		let totalLength = 0;
 		const watcher = new stream.Writable({
@@ -64,7 +65,10 @@ const start = async (command) => {
 			final(callback) {
 				reject(
 					new Error(
-						`Failed to get a local URL: ${Buffer.concat(chunks, totalLength)}`,
+						[
+							`Failed to get a local URL: ${Buffer.concat(chunks, totalLength)}`.trim(),
+							`command: ${command}`,
+						].join("\n"),
 					),
 				);
 				callback();
@@ -109,7 +113,7 @@ test.after(async () => {
 
 let port = 9200;
 
-test("GET /src", async (t) => {
+test("GET /src", async (_t) => {
 	const command = `sable --verbose --port ${port++}`;
 	const { localUrl, abc } = await start(command);
 	const res = await fetch(new URL("/src", localUrl), { signal: abc.signal });
@@ -119,7 +123,7 @@ test("GET /src", async (t) => {
 	assert.ok(html.includes('href="./index.html"'));
 });
 
-test("GET /src (documentRoot)", async (t) => {
+test("GET /src (documentRoot)", async (_t) => {
 	const command = `sable --verbose --port ${port++} src`;
 	const { localUrl, abc } = await start(command);
 	const res = await fetch(new URL("/", localUrl), { signal: abc.signal });
@@ -128,14 +132,14 @@ test("GET /src (documentRoot)", async (t) => {
 	assert.ok(html.includes("test-src"));
 });
 
-test("GET /", async (t) => {
+test("GET /", async (_t) => {
 	const command = `sable --verbose --port ${port++}`;
 	const { localUrl, abc } = await start(command);
 	const res = await fetch(new URL("/", localUrl), { signal: abc.signal });
 	assert.equal(res.status, 200);
 });
 
-test("GET /index.mjs", async (t) => {
+test("GET /index.mjs", async (_t) => {
 	const command = `sable --verbose --port ${port++}`;
 	const { localUrl, abc } = await start(command);
 	const res = await fetch(
