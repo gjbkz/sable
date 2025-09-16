@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.5.16 (2025-09-16)
+
+### Bug Fixes
+
+- update artifact names and paths in CI workflow ([cfdea7f](https://github.com/gjbkz/sable/commit/cfdea7f8ff3b5574f0e2f2dfac578a4998f318fc))
+- biome errors ([9654356](https://github.com/gjbkz/sable/commit/96543563912d7fe5a425c2d8404de7f5a2e7beb7))
+
+### Dependency Upgrades
+
+- update changelog command to use npx and remove unused devDependencies ([268f2ef](https://github.com/gjbkz/sable/commit/268f2ef8d55d05e1588581a9ade3eb5688f3497f))
+- upgrade dependencies ([e3fcf70](https://github.com/gjbkz/sable/commit/e3fcf700e9a23d4dd3c2a0f866fcb0bd71a122a7))
+- @biomejs/biome:1.8.3→2.2.4 @nlib/changelog:0.3.1→0.3.2 @types/node:22.5.4→24.4.0 commander:12.1.0→14.0.1 middleware-static-livereload:1.3.0→1.4.0 typescript:5.5.4→5.9.2 ([02690b1](https://github.com/gjbkz/sable/commit/02690b146d9da9e33d3290b5eae381258ecf19d2))
+
+
 ## v0.5.15 (2024-09-08)
 
 ### Tests
