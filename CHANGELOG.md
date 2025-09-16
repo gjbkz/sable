@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.17 (2025-09-16)
+
+### Code Refactoring
+
+- reorganize middleware type definitions for clarity ([f25d90c](https://github.com/gjbkz/sable/commit/f25d90c92eb3ded6970a47460aa40ee9752ffc40))
+
+
 ## v0.5.16 (2025-09-16)
 
 ### Bug Fixes
