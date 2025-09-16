@@ -36,7 +36,7 @@
 		"build:code": "node build.ts",
 		"test": "node --test test/index.mjs",
 		"version": "run-s version:changelog version:add",
-		"version:changelog": "nlib-changelog --output CHANGELOG.md",
+		"version:changelog": "npx @nlib/changelog --output CHANGELOG.md",
 		"version:add": "git add ."
 	},
 	"dependencies": {
@@ -46,8 +46,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",
-		"@nlib/changelog": "0.3.2",
-		"@nlib/lint-commit": "1.0.1",
 		"@types/connect": "3.4.38",
 		"@types/node": "24.4.0",
 		"esbuild": "0.25.9",
