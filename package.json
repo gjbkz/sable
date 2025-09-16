@@ -42,7 +42,7 @@
 	"dependencies": {
 		"commander": "14.0.1",
 		"connect": "3.7.0",
-		"middleware-static-livereload": "1.4.2"
+		"middleware-static-livereload": "1.4.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",
