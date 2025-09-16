@@ -1,8 +1,29 @@
 import * as http from "node:http";
-import connect, { type HandleFunction } from "connect";
+import connect from "connect";
 import * as staticLivereload from "middleware-static-livereload";
 
 export { LogLevel } from "middleware-static-livereload";
+
+type NextFunction = (err?: unknown) => void;
+export type SimpleHandleFunction = (
+	req: http.IncomingMessage,
+	res: http.ServerResponse,
+) => void;
+export type NextHandleFunction = (
+	req: http.IncomingMessage,
+	res: http.ServerResponse,
+	next: NextFunction,
+) => void;
+export type ErrorHandleFunction = (
+	err: unknown,
+	req: http.IncomingMessage,
+	res: http.ServerResponse,
+	next: NextFunction,
+) => void;
+export type HandleFunction =
+	| SimpleHandleFunction
+	| NextHandleFunction
+	| ErrorHandleFunction;
 
 export interface SableOptions
 	extends Partial<staticLivereload.MiddlewareOptions> {
