@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.18 (2026-02-22)
+
+### Documentation
+
+- update readme ([94c1c80](https://github.com/gjbkz/sable/commit/94c1c808703d91b3ac644000b899a1429e9a5a67))
+- align CLI option wording with middleware-static-livereload ([9f38d30](https://github.com/gjbkz/sable/commit/9f38d302521e87cda29ae138468f20ec413e6477))
+
+### Dependency Upgrades
+
+- upgrade middleware-static-livereload ([41b2800](https://github.com/gjbkz/sable/commit/41b28007c0dece430719c7ea8c5ae3d7c25816a4))
+
+
 ## v0.5.17 (2025-09-16)
 
 ### Code Refactoring
