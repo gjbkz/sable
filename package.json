@@ -1,7 +1,7 @@
 {
 	"name": "sable",
 	"version": "0.5.17",
-	"description": "Starts a server and a file watcher",
+	"description": "HTTP development server with file watching",
 	"author": {
 		"name": "Kei Ito",
 		"email": "kei.itof@gmail.com",
@@ -30,19 +30,20 @@
 		"types"
 	],
 	"scripts": {
-		"lint": "npx @biomejs/biome lint",
+		"lint": "npx @biomejs/biome check",
+		"format": "npx @biomejs/biome format --write",
 		"build": "run-s build:*",
 		"build:typedef": "tsc --project tsconfig.typedef.json",
 		"build:code": "node build.ts",
 		"test": "node --test test/index.mjs",
-		"version": "run-s version:changelog version:add",
+		"version": "run-s version:changelog format version:add",
 		"version:changelog": "npx @nlib/changelog --output CHANGELOG.md",
 		"version:add": "git add ."
 	},
 	"dependencies": {
 		"commander": "14.0.2",
 		"connect": "3.7.0",
-		"middleware-static-livereload": "1.4.3"
+		"middleware-static-livereload": "1.5.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",
