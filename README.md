@@ -3,7 +3,17 @@
 [![test](https://github.com/kei-ito/sable/actions/workflows/test.yml/badge.svg)](https://github.com/kei-ito/sable/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/kei-ito/sable/branch/master/graph/badge.svg)](https://codecov.io/gh/kei-ito/sable)
 
-Starts an HTTP development server.
+An HTTP development server that serves static files and reloads the browser when files change. If the configured port is already in use, sable automatically tries the next one, so multiple projects can run side by side without any configuration changes.
+
+## Quick start
+
+No installation required. Run the following command to serve the current directory:
+
+```
+npx sable .
+```
+
+The server URL is printed to stdout once it is ready. Edit any file in the directory and the browser reloads automatically.
 
 ## Install
 
