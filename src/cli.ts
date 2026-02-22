@@ -30,10 +30,7 @@ const program = new Command()
 	.option("-v, --verbose", "Enable verbose logging")
 	.option("--noWatch", "Set the watch option to false")
 	.option("-i, --index <s>", "Value for the index option (default: index.html)")
-	.argument(
-		"[documentRoot...]",
-		"Directories that contain files to be served",
-	);
+	.argument("[documentRoot...]", "Directories that contain files to be served");
 
 program.parse();
 
