@@ -20,17 +20,20 @@ const { version } = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 
 const program = new Command()
 	.version(version)
-	.description("Starts a HTTP server for development")
+	.description("Starts an HTTP development server")
 	.option(
 		"-p, --port <n>",
-		"A port number for HTTP, HTTPS (4000)",
+		"Port number for HTTP/HTTPS (default: 4000)",
 		Number.parseInt,
 	)
-	.option("-h, --host <s>", "Hostname")
+	.option("-h, --host <s>", "Host name to bind")
 	.option("-v, --verbose", "Enable verbose logging")
-	.option("--noWatch", "Disable watching")
-	.option("-i, --index <s>", "A filename of index (index.html)")
-	.argument("[documentRoot...]", "Paths to serve");
+	.option("--noWatch", "Set the watch option to false")
+	.option("-i, --index <s>", "Value for the index option (default: index.html)")
+	.argument(
+		"[documentRoot...]",
+		"Directories that contain files to be served",
+	);
 
 program.parse();
 

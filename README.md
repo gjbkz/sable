@@ -3,7 +3,7 @@
 [![test](https://github.com/kei-ito/sable/actions/workflows/test.yml/badge.svg)](https://github.com/kei-ito/sable/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/kei-ito/sable/branch/master/graph/badge.svg)](https://codecov.io/gh/kei-ito/sable)
 
-Starts a server for development.
+Starts an HTTP development server.
 
 ## Install
 
@@ -15,17 +15,19 @@ npm install sable --save-dev
 
 ```
 $ sable -h
-Usage: sable [options] <documentRoot ...>
+Usage: sable [options] [documentRoot...]
 
-Starts a HTTP server for development
+Starts an HTTP development server
 
 Options:
-  -V, --version    output the version number
-  -p, --port <n>   A port number for HTTP, HTTPS (4000)
-  -h, --host <s>   Hostname
-  --noWatch        Disable watching
-  -i, --index <s>  A filename of index (index.html)
-  -h, --help       output usage information
+  -V, --version    Output the version number
+  -p, --port <n>   Port number for HTTP/HTTPS (default: 4000)
+  -h, --host <s>   Host name to bind
+  -v, --verbose    Enable verbose logging
+  --noWatch        Set the watch option to false
+  -i, --index <s>  Value for the index option (default: index.html)
+  [documentRoot...] Directories that contain files to be served
+  -h, --help       Output usage information
 ```
 
 ## Javascript API
@@ -38,11 +40,11 @@ startServer({/* options */})
 
 ### Options
 
-`startServer` supports all of the options provided by [middleware-static-livereload]
-, `port`, `host` and `middlewares`.
+`startServer` supports all options from [middleware-static-livereload], plus
+`port`, `host`, and `middlewares`.
 
 ```javascript
-interface SableOptions extends MiddlewareStaticLivereload.Options {
+interface SableOptions extends Partial<MiddlewareOptions> {
     /**
      * The first argument of server.listen()
      * https://nodejs.org/api/net.html#net_server_listen_port_host_backlog_callback

@@ -1,7 +1,7 @@
 {
 	"name": "sable",
 	"version": "0.5.17",
-	"description": "Starts a server and a file watcher",
+	"description": "HTTP development server with file watching",
 	"author": {
 		"name": "Kei Ito",
 		"email": "kei.itof@gmail.com",
