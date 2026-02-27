@@ -30,7 +30,10 @@ const program = new Command()
 	.option("-v, --verbose", "Enable verbose logging")
 	.option("--noWatch", "Set the watch option to false")
 	.option("-i, --index <s>", "Value for the index option (default: index.html)")
-	.option("-F, --fileOperations", "Enable all file operations (upload, delete, text upload)")
+	.option(
+		"-F, --fileOperations",
+		"Enable all file operations (upload, delete, text upload)",
+	)
 	.option("--allowFileUpload", "Enable file upload")
 	.option("--allowDelete", "Enable file deletion")
 	.option("--allowTextUpload", "Enable text upload")
