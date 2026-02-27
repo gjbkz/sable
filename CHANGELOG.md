@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.19 (2026-02-27)
+
+### New Features
+
+- add CLI flags for file operations: `-F`/`--fileOperations` to enable all file operations at once, and individual `--allowFileUpload`, `--allowDelete`, `--allowTextUpload` flags for fine-grained control ([c1b905f](https://github.com/gjbkz/sable/commit/c1b905f93a157df2dc672bb0009644ec70b27070))
+
+### Dependency Upgrades
+
+- @biomejs/biome:2.2.4→2.4.4 @types/node:24.4.0→25.3.2 commander:14.0.2→14.0.3 esbuild:0.25.12→0.27.3 middleware-static-livereload:1.5.2→1.5.3 typescript:5.9.2→5.9.3 ([56239aa](https://github.com/gjbkz/sable/commit/56239aa))
+
+
 ## v0.5.18 (2026-02-22)
 
 ### Documentation
