@@ -30,6 +30,10 @@ const program = new Command()
 	.option("-v, --verbose", "Enable verbose logging")
 	.option("--noWatch", "Set the watch option to false")
 	.option("-i, --index <s>", "Value for the index option (default: index.html)")
+	.option("-F, --fileOperations", "Enable all file operations (upload, delete, text upload)")
+	.option("--allowFileUpload", "Enable file upload")
+	.option("--allowDelete", "Enable file deletion")
+	.option("--allowTextUpload", "Enable text upload")
 	.argument("[documentRoot...]", "Directories that contain files to be served");
 
 program.parse();
@@ -40,12 +44,20 @@ const {
 	host,
 	verbose = false,
 	index,
+	fileOperations,
+	allowFileUpload,
+	allowDelete,
+	allowTextUpload,
 } = program.opts() as {
 	port?: Array<number> | number;
 	host?: Array<string> | string;
 	verbose?: boolean;
 	noWatch?: true;
 	index?: Array<string> | string;
+	fileOperations?: true;
+	allowFileUpload?: true;
+	allowDelete?: true;
+	allowTextUpload?: true;
 };
 const documentRoot = program.args;
 if (documentRoot.length === 0) {
@@ -70,6 +82,15 @@ if (Array.isArray(index)) {
 	options.index = index[0];
 } else if (index) {
 	options.index = index;
+}
+if (fileOperations) {
+	options.fileOperations = true;
+} else if (allowFileUpload || allowDelete || allowTextUpload) {
+	options.fileOperations = {
+		allowFileUpload,
+		allowDelete,
+		allowTextUpload,
+	};
 }
 startServer(options).catch((error) => {
 	console.error(error);

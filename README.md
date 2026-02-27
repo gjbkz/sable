@@ -30,14 +30,18 @@ Usage: sable [options] [documentRoot...]
 Starts an HTTP development server
 
 Options:
-  -V, --version    Output the version number
-  -p, --port <n>   Port number for HTTP/HTTPS (default: 4000)
-  -h, --host <s>   Host name to bind
-  -v, --verbose    Enable verbose logging
-  --noWatch        Set the watch option to false
-  -i, --index <s>  Value for the index option (default: index.html)
-  [documentRoot...] Directories that contain files to be served
-  -h, --help       Output usage information
+  -V, --version        Output the version number
+  -p, --port <n>       Port number for HTTP/HTTPS (default: 4000)
+  -h, --host <s>       Host name to bind
+  -v, --verbose        Enable verbose logging
+  --noWatch            Set the watch option to false
+  -i, --index <s>      Value for the index option (default: index.html)
+  -F, --fileOperations Enable all file operations (upload, delete, text upload)
+  --allowFileUpload    Enable file upload
+  --allowDelete        Enable file deletion
+  --allowTextUpload    Enable text upload
+  [documentRoot...]    Directories that contain files to be served
+  -h, --help           Output usage information
 ```
 
 ## Javascript API
