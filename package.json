@@ -1,6 +1,6 @@
 {
 	"name": "sable",
-	"version": "0.5.18",
+	"version": "0.5.19",
 	"description": "HTTP development server with file watching",
 	"author": {
 		"name": "Kei Ito",
