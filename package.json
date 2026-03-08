@@ -46,7 +46,7 @@
 		"middleware-static-livereload": "1.5.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.4",
+		"@biomejs/biome": "2.4.6",
 		"@types/connect": "3.4.38",
 		"@types/node": "25.3.2",
 		"esbuild": "0.27.3",
