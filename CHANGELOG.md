@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.0 (2026-08-10)
+
+### Bug Fixes
+
+- harden server access and file operations ([669b19d](https://github.com/gjbkz/sable/commit/669b19de6a664c6ff04d65f9cfa6155b3d8dda9f))
+
+
 ## v0.5.19 (2026-02-27)
 
 ### Features
