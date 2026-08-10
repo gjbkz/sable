@@ -32,7 +32,7 @@ Starts an HTTP development server
 Options:
   -V, --version        Output the version number
   -p, --port <n>       Port number for HTTP/HTTPS (default: 4000)
-  -h, --host <s>       Host name to bind
+  -h, --host <s>       Host name to bind (default: 127.0.0.1)
   -v, --verbose        Enable verbose logging
   --noWatch            Set the watch option to false
   -i, --index <s>      Value for the index option (default: index.html)
@@ -40,8 +40,10 @@ Options:
   --allowFileUpload    Enable file upload
   --allowDelete        Enable file deletion
   --allowTextUpload    Enable text upload
+  --maxFileOperationBytes <n>
+                        Maximum request body size for file operations (default: 10485760)
   [documentRoot...]    Directories that contain files to be served
-  -h, --help           Output usage information
+  --help               Output usage information
 ```
 
 ## Javascript API
@@ -68,9 +70,14 @@ interface SableOptions extends Partial<MiddlewareOptions> {
     /**
      * The second argument of server.listen()
      * https://nodejs.org/api/net.html#net_server_listen_port_host_backlog_callback
-     * @default undefined
+     * @default "127.0.0.1"
      */
     host?: string,
+    /**
+     * Maximum request body size for file operations.
+     * @default 10485760 (10 MiB)
+     */
+    maxFileOperationBytes?: number,
     /**
      * A list of middlewares.
      * @default []
@@ -78,6 +85,17 @@ interface SableOptions extends Partial<MiddlewareOptions> {
     middlewares?: Array<connect.HandleFunction>,
 }
 ```
+
+### Security
+
+Sable listens on `127.0.0.1` by default. To make a read-only server available
+to other devices, explicitly pass `--host 0.0.0.0` or `--host ::`. Anyone who
+can reach that address can read the files under `documentRoot`, so do not serve
+directories containing secrets.
+
+File upload, deletion, and text upload are restricted to loopback hosts. File
+operation requests are also limited to the same origin and to a 10 MiB body by
+default. Use `maxFileOperationBytes` to choose a different positive limit.
 
 [middleware-static-livereload]: https://github.com/kei-ito/middleware-static-livereload#options
 

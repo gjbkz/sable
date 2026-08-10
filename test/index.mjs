@@ -4,6 +4,7 @@ import * as assert from "node:assert/strict";
 import * as childProcess from "node:child_process";
 import * as stream from "node:stream";
 import { test } from "node:test";
+import { startServer } from "../esm/index.mjs";
 
 const cwd = new URL(".", import.meta.url);
 /** @type {Set<{name: string, fn: () => void | Promise<void>}>} */
@@ -113,6 +114,13 @@ test.after(async () => {
 
 let port = 9200;
 
+test("rejects file operations on non-loopback hosts", async () => {
+	await assert.rejects(
+		startServer({ host: "0.0.0.0", fileOperations: true }),
+		/require a loopback host/,
+	);
+});
+
 test("GET /src", async (_t) => {
 	const command = `sable --verbose --port ${port++}`;
 	const { localUrl, abc } = await start(command);
@@ -135,8 +143,53 @@ test("GET /src (documentRoot)", async (_t) => {
 test("GET /", async (_t) => {
 	const command = `sable --verbose --port ${port++}`;
 	const { localUrl, abc } = await start(command);
+	assert.equal(localUrl.hostname, "127.0.0.1");
 	const res = await fetch(new URL("/", localUrl), { signal: abc.signal });
 	assert.equal(res.status, 200);
+});
+
+test("rejects paths that escape documentRoot", async (_t) => {
+	const command = `sable --verbose --port ${port++} src`;
+	const { localUrl, abc } = await start(command);
+	for (const pathname of [
+		"/%252e%252e/index.mjs",
+		"/%252e%252e/%252e%252e/package.json",
+		"/%2fetc/passwd",
+	]) {
+		const res = await fetch(new URL(pathname, localUrl), {
+			signal: abc.signal,
+		});
+		assert.equal(res.status, 400, pathname);
+	}
+});
+
+test("rejects cross-origin file operations", async (_t) => {
+	const command = `sable --verbose --port ${port++} --allowTextUpload src`;
+	const { localUrl, abc } = await start(command);
+	const res = await fetch(
+		new URL("/?_mslAction=upload&name=blocked.txt", localUrl),
+		{
+			method: "POST",
+			headers: { origin: "https://example.com" },
+			body: "blocked",
+			signal: abc.signal,
+		},
+	);
+	assert.equal(res.status, 403);
+});
+
+test("limits file operation request bodies", async (_t) => {
+	const command = `sable --verbose --port ${port++} --allowTextUpload --maxFileOperationBytes 4 src`;
+	const { localUrl, abc } = await start(command);
+	const res = await fetch(
+		new URL("/?_mslAction=upload&name=blocked.txt", localUrl),
+		{
+			method: "POST",
+			body: "12345",
+			signal: abc.signal,
+		},
+	);
+	assert.equal(res.status, 413);
 });
 
 test("GET /index.mjs", async (_t) => {

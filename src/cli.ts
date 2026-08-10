@@ -26,7 +26,7 @@ const program = new Command()
 		"Port number for HTTP/HTTPS (default: 4000)",
 		Number.parseInt,
 	)
-	.option("-h, --host <s>", "Host name to bind")
+	.option("-h, --host <s>", "Host name to bind (default: 127.0.0.1)")
 	.option("-v, --verbose", "Enable verbose logging")
 	.option("--noWatch", "Set the watch option to false")
 	.option("-i, --index <s>", "Value for the index option (default: index.html)")
@@ -37,6 +37,11 @@ const program = new Command()
 	.option("--allowFileUpload", "Enable file upload")
 	.option("--allowDelete", "Enable file deletion")
 	.option("--allowTextUpload", "Enable text upload")
+	.option(
+		"--maxFileOperationBytes <n>",
+		"Maximum request body size for file operations (default: 10485760)",
+		Number.parseInt,
+	)
 	.argument("[documentRoot...]", "Directories that contain files to be served");
 
 program.parse();
@@ -51,6 +56,7 @@ const {
 	allowFileUpload,
 	allowDelete,
 	allowTextUpload,
+	maxFileOperationBytes,
 } = program.opts() as {
 	port?: Array<number> | number;
 	host?: Array<string> | string;
@@ -61,6 +67,7 @@ const {
 	allowFileUpload?: true;
 	allowDelete?: true;
 	allowTextUpload?: true;
+	maxFileOperationBytes?: number;
 };
 const documentRoot = program.args;
 if (documentRoot.length === 0) {
@@ -85,6 +92,9 @@ if (Array.isArray(index)) {
 	options.index = index[0];
 } else if (index) {
 	options.index = index;
+}
+if (maxFileOperationBytes !== undefined) {
+	options.maxFileOperationBytes = maxFileOperationBytes;
 }
 if (fileOperations) {
 	options.fileOperations = true;
