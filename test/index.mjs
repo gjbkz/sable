@@ -2,9 +2,17 @@
 //@ts-check
 import * as assert from "node:assert/strict";
 import * as childProcess from "node:child_process";
+import { existsSync } from "node:fs";
 import * as stream from "node:stream";
 import { test } from "node:test";
-import { startServer } from "../esm/index.mjs";
+
+if (!existsSync(new URL("../esm/index.mjs", import.meta.url))) {
+	childProcess.execSync("npm run build", {
+		cwd: new URL("../", import.meta.url),
+		stdio: "inherit",
+	});
+}
+const { startServer } = await import("../esm/index.mjs");
 
 const cwd = new URL(".", import.meta.url);
 /** @type {Set<{name: string, fn: () => void | Promise<void>}>} */
@@ -43,7 +51,7 @@ const start = async (command) => {
 				command = `taskkill /pid ${child.pid} /f /t`;
 				break;
 			default:
-				command = `kill -15 ${child.pid}`;
+				command = `kill -15 -${child.pid}`;
 				break;
 		}
 		if (command) {
