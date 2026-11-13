@@ -49,9 +49,10 @@ Options:
 ## Javascript API
 
 ```javascript
-import {startServer} from 'sable';
-startServer({/* options */})
-.then((server) => console.log(server.address()))
+import { startServer } from "sable";
+startServer({
+	/* options */
+}).then((server) => console.log(server.address()));
 ```
 
 ### Options
